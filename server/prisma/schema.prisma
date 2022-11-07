@@ -41,12 +41,12 @@ model Participant {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  avatarUrl String? //"?" pode esta vazio
-  createdAt DateTime @default(now())
-
+  id              String        @id @default(cuid())
+  name            String
+  email           String        @unique
+  avatarUrl       String? //"?" pode esta vazio
+  createdAt       DateTime      @default(now())
+  googleId        String?       @unique
   participatingAt Participant[] //participante em varios boloes
   ownPools        Pool[]
 }
@@ -61,14 +61,16 @@ model Game {
 }
 
 model Guess {
-  id              String   @id @default(cuid())
-  firstTeamPoints Int
-  secondTeamPoint Int
-  createdAt       DateTime @default(now())
+  id               String   @id @default(cuid())
+  firstTeamPoints  Int
+  secondTeamPoints Int
+  createdAt        DateTime @default(now())
 
   gameId        String
   participantId String
 
   game        Game        @relation(fields: [gameId], references: [id])
   participant Participant @relation(fields: [participantId], references: [id])
+
+  @@unique([participantId, gameId])
 }
